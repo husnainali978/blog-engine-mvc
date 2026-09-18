@@ -1,0 +1,80 @@
+@model PostDetailsViewModel
+@{
+    ViewData["Title"] = Model.Post.Title;
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <article>
+            <h1 class="mb-1">@Model.Post.Title</h1>
+            <div class="text-muted small mb-3">
+                by @Model.Post.Author &middot; @Model.Post.CreatedAtUtc.ToString("MMMM d, yyyy")
+                @if (Model.Post.UpdatedAtUtc is not null)
+                {
+                    <span>&middot; updated @Model.Post.UpdatedAtUtc.Value.ToString("MMMM d, yyyy")</span>
+                }
+            </div>
+            <div class="mb-4">
+                @foreach (var tag in Model.Post.Tags.OrderBy(t => t.Name))
+                {
+                    <a asp-controller="Home" asp-action="Index" asp-route-tag="@tag.Slug"
+                       class="badge text-bg-light border text-decoration-none me-1">@tag.Name</a>
+                }
+            </div>
+
+            <div class="blog-content">
+                @Html.Raw(Model.ContentHtml)
+            </div>
+        </article>
+
+        <hr class="my-5" />
+
+        <section id="comments">
+            <h2 class="h4 mb-3">
+                Comments
+                @if (Model.Post.Comments.Any())
+                {
+                    <span class="text-muted fs-6">(@Model.Post.Comments.Count)</span>
+                }
+            </h2>
+
+            @if (!Model.Post.Comments.Any())
+            {
+                <p class="text-muted">No comments yet &mdash; be the first to say something.</p>
+            }
+            else
+            {
+                foreach (var comment in Model.Post.Comments.OrderBy(c => c.CreatedAtUtc))
+                {
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="fw-semibold">@comment.AuthorName</div>
+                        <div class="text-muted small mb-1">@comment.CreatedAtUtc.ToString("MMMM d, yyyy 'at' h:mm tt")</div>
+                        <p class="mb-0">@comment.Body</p>
+                    </div>
+                }
+            }
+
+            <h3 class="h6 mt-4">Leave a comment</h3>
+            <form asp-controller="Posts" asp-action="AddComment"
+                  asp-route-id="@Model.Post.Id" asp-route-slug="@Model.Post.Slug" method="post" class="mt-2">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="NewComment.PostId" />
+                <div class="mb-3">
+                    <label asp-for="NewComment.AuthorName" class="form-label"></label>
+                    <input asp-for="NewComment.AuthorName" class="form-control" />
+                    <span asp-validation-for="NewComment.AuthorName" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NewComment.Body" class="form-label"></label>
+                    <textarea asp-for="NewComment.Body" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="NewComment.Body" class="text-danger small"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Post comment</button>
+            </form>
+        </section>
+    </div>
+
+    <div class="col-lg-4">
+        <a asp-controller="Home" asp-action="Index" class="small">&larr; Back to all posts</a>
+    </div>
+</div>
