@@ -1,0 +1,41 @@
+@model PostFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Id" />
+
+<div class="mb-3">
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" class="form-control" />
+    <span asp-validation-for="Title" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Summary" class="form-label"></label>
+    <input asp-for="Summary" class="form-control" placeholder="One or two sentences shown in the post list" />
+    <span asp-validation-for="Summary" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="MarkdownContent" class="form-label"></label>
+    <textarea asp-for="MarkdownContent" class="form-control font-monospace" rows="16"></textarea>
+    <span asp-validation-for="MarkdownContent" class="text-danger small"></span>
+    <div class="form-text">Markdown is supported: headings, lists, code fences, links, tables, etc.</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Author" class="form-label"></label>
+        <input asp-for="Author" class="form-control" />
+        <span asp-validation-for="Author" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="TagsInput" class="form-label"></label>
+        <input asp-for="TagsInput" class="form-control" placeholder="e.g. ASP.NET Core, EF Core" />
+        <div class="form-text">Existing tags are reused by name; anything new is created automatically.</div>
+    </div>
+</div>
+
+<div class="form-check mb-4">
+    <input asp-for="IsPublished" class="form-check-input" />
+    <label asp-for="IsPublished" class="form-check-label"></label>
+</div>
