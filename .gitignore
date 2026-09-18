@@ -1,0 +1,15 @@
+## .NET / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+## SQLite database files (created at runtime; re-seeded automatically)
+*.db
+*.db-shm
+*.db-wal
+
+## Rider / VS Code
+.idea/
+*.swp
