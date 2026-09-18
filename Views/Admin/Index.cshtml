@@ -1,0 +1,63 @@
+@model IReadOnlyList<Post>
+@{
+    ViewData["Title"] = "Manage Posts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Manage posts</h1>
+    <a asp-controller="Admin" asp-action="Create" class="btn btn-primary">+ New post</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No posts yet. Create the first one.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Tags</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" asp-route-slug="@post.Slug">
+                                @post.Title
+                            </a>
+                        </td>
+                        <td>
+                            @foreach (var tag in post.Tags.OrderBy(t => t.Name))
+                            {
+                                <span class="badge text-bg-light border me-1">@tag.Name</span>
+                            }
+                        </td>
+                        <td>
+                            @if (post.IsPublished)
+                            {
+                                <span class="badge text-bg-success">Published</span>
+                            }
+                            else
+                            {
+                                <span class="badge text-bg-secondary">Draft</span>
+                            }
+                        </td>
+                        <td class="text-muted small">@post.CreatedAtUtc.ToString("MMM d, yyyy")</td>
+                        <td class="text-end">
+                            <a asp-controller="Admin" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-controller="Admin" asp-action="Delete" asp-route-id="@post.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
